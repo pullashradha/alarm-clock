@@ -1,1 +1,5 @@
-var Time = require('./../js/alarm-clock.js').TimeModule;
+var Time = require('./../js/time.js').TimeModule;
+
+$(document).ready(function() {
+  $("#time").text(moment());
+});
