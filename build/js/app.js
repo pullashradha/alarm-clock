@@ -2,27 +2,35 @@
 exports.apiKey= "00426bfe510e6d44dd3c426dccd42f57";
 
 },{}],2:[function(require,module,exports){
+function Temperature (kelvin) {
+  this.temperature = kelvin;
+}
+
+Temperature.prototype.convertedTemperature = function () {
+  var farenheit = (this.temperature * 9/5)-459.67;
+  return farenheit;
+}
+
+exports.temperatureModule = Temperature;
+
+},{}],3:[function(require,module,exports){
 function Alarm (alarm) {
   this.alarm = alarm;
 }
 
 Alarm.prototype.getAlarm = function () {
-  console.log(this.alarm);
-  console.log(this.time);
   var self = this;
   var myAlarm = setInterval(function() {
     if (moment().format('HH:mm') == self.alarm) {
       alert("It's time");
     }
-    console.log(moment());
-    console.log(self.alarm);
-  }, 1000);
+  }, 100000);
   return myAlarm;
 };
 
 exports.alarmModule = Alarm;
 
-},{}],3:[function(require,module,exports){
+},{}],4:[function(require,module,exports){
 var Alarm = require("./../js/time.js").alarmModule;
 
 $(document).ready(function() {
@@ -35,6 +43,7 @@ $(document).ready(function() {
   });
 });
 
+var Temperature = require("./../js/temperature.js").temperatureModule;
 var apiKey = require('./../.env').apiKey;
 
 $(document).ready(function() {
@@ -42,11 +51,13 @@ $(document).ready(function() {
     var city = $('#location').val();
     $('#location').val("");
     $.get('http://api.openweathermap.org/data/2.5/weather?q=' + city + '&appid=' + apiKey).then(function(response) {
-      $('.showWeather').text("The humidity in " + city + " is " + response.main.humidity + "%");
+      var kelvin = response.main.temp;
+      var newTemperature = new Temperature (kelvin);
+      $('.showWeather').text("The humidity in " + city + " is " + response.main.humidity + "%, and the temperature is " + newTemperature.convertedTemperature() + " degrees.");
     }).fail(function(error){
       $('.showWeather').text(error.responseJSON.message);
     });
   });
 });
 
-},{"./../.env":1,"./../js/time.js":2}]},{},[3]);
+},{"./../.env":1,"./../js/temperature.js":2,"./../js/time.js":3}]},{},[4]);
