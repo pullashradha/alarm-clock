@@ -8,7 +8,7 @@ Alarm.prototype.getAlarm = function () {
     if (moment().format('HH:mm') == self.alarm) {
       alert("It's time");
     }
-  }, 100000);
+  }, 1000);
   return myAlarm;
 };
 

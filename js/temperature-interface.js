@@ -1,15 +1,16 @@
-
 var Temperature = require("./../js/temperature.js").temperatureModule;
 var apiKey = require('./../.env').apiKey;
 
 $(document).ready(function() {
-  $('#weatherLocation').click(function() {
+  $('#temp').click(function() {
     var city = $('#location').val();
     // $('#location').val("");
     $.get('http://api.openweathermap.org/data/2.5/weather?q=' + city + '&appid=' + apiKey).then(function(response) {
-      $('.showWeather').text("The humidity in " + city + " is " + response.main.humidity + "%");
+      var kelvin = response.main.temp;
+      var newTemperature = new Temperature (kelvin);
+      $('.showtemp').text("the temperature is " + newTemperature.convertedTemperature() + " degrees.");
     }).fail(function(error){
-      $('.showWeather').text(error.responseJSON.message);
+      $('.showtemp').text(error.responseJSON.message);
     });
   });
 });
